@@ -21,7 +21,29 @@ function tween(ms,update){return new Promise(resolve=>{const begin=performance.n
 async function animateRows(from,to,entering=new Set(),duration=260){visualRows=new Map();visualAlpha=new Map();await tween(duration,(t)=>{for(const s of board.sliders){const a=entering.has(s.id)?ROWS+.8:(from.get(s.id)??s.row),b=to.get(s.id)??s.row;visualRows.set(s.id,a+(b-a)*t);visualAlpha.set(s.id,entering.has(s.id)?Math.min(1,t*1.8):1)}});visualRows=null;visualAlpha=null;draw()}
 function applyClear(result){if(result.total){lines+=result.total;score+=result.total*100*Math.max(1,result.chains);ui.lines.textContent=lines;ui.score.textContent=score;}}
 async function animateClearChains(){let total=0,chains=0;while(true){const full=board.fullRows();if(!full.length)break;chains++;total+=full.length;const rows=new Set(full),clearing=new Set(board.sliders.filter(s=>rows.has(s.row)).map(s=>s.id));clearRows=rows;visualAlpha=new Map(board.sliders.map(s=>[s.id,1]));await tween(380,(t,raw)=>{clearProgress=raw;for(const id of clearing)visualAlpha.set(id,raw<.42?1:Math.max(0,1-(raw-.42)/.58))});board.sliders=board.sliders.filter(s=>!clearing.has(s.id));visualAlpha=null;clearRows=null;clearProgress=0;draw();const before=new Map(board.sliders.map(s=>[s.id,s.row]));board.settleAll();const after=new Map(board.sliders.map(s=>[s.id,s.row]));await animateRows(before,after,new Set(),260);}const result={total,chains};applyClear(result);return result;}
-async function spawnPreviewBatch(){ui.hintTitle.textContent='新滑块生成中…';const batchToSpawn=nextBatch,before=new Map(board.sliders.map(s=>[s.id,s.row])),idsBefore=new Set(board.sliders.map(s=>s.id));board.insertBatch(batchToSpawn);const after=new Map(board.sliders.map(s=>[s.id,s.row])),entering=new Set(board.sliders.filter(s=>!idsBefore.has(s.id)).map(s=>s.id));await animateRows(before,after,entering,340);nextBatch=board.generateBatch();renderPreview();}
+async function spawnPreviewBatch(){
+  const batchToSpawn=nextBatch;
+  ui.hintTitle.textContent='原最后一行上移';
+  const beforeLift=new Map(board.sliders.map(s=>[s.id,s.row]));
+  board.liftBottomRow();
+  const afterLift=new Map(board.sliders.map(s=>[s.id,s.row]));
+  await animateRows(beforeLift,afterLift,new Set(),260);
+
+  ui.hintTitle.textContent='新滑块生成中…';
+  const idsBefore=new Set(board.sliders.map(s=>s.id));
+  board.addBatch(batchToSpawn);
+  const spawnedRows=new Map(board.sliders.map(s=>[s.id,s.row]));
+  const entering=new Set(board.sliders.filter(s=>!idsBefore.has(s.id)).map(s=>s.id));
+  await animateRows(afterLift,spawnedRows,entering,300);
+
+  ui.hintTitle.textContent='无支撑滑块自然下落';
+  const beforeFall=new Map(board.sliders.map(s=>[s.id,s.row]));
+  board.settleAll();
+  const afterFall=new Map(board.sliders.map(s=>[s.id,s.row]));
+  await animateRows(beforeFall,afterFall,new Set(),300);
+  nextBatch=board.generateBatch();
+  renderPreview();
+}
 async function commit(){if(!selected||busy||selected.col===startCol)return;busy=true;ui.hintTitle.textContent='1/3  滑块下落';const d=board.fallDistance(selected);if(d){const from=new Map([[selected.id,selected.row]]),target=selected.row+d;selected.row=target;await animateRows(from,new Map([[selected.id,target]]),new Set(),Math.min(700,360+d*90));ui.hintTitle.textContent='1/3  已落位';await new Promise(resolve=>setTimeout(resolve,280));}else await new Promise(resolve=>setTimeout(resolve,160));ui.hintTitle.textContent='2/3  检查并消除';const moveClear=await animateClearChains();await new Promise(resolve=>setTimeout(resolve,moveClear.total?180:140));await new Promise(resolve=>requestAnimationFrame(resolve));ui.hintTitle.textContent='3/3  生成新滑块';await spawnPreviewBatch();if(board.fullRows().length){ui.hintTitle.textContent='生成凑满一行，立即消除';await animateClearChains();if(board.sliders.length===0){ui.hintTitle.textContent='棋盘已清空，自动再生成';await new Promise(resolve=>setTimeout(resolve,180));await spawnPreviewBatch();}}if(board.isGameOver()){finish();return;}selected=null;busy=false;ui.hintTitle.textContent='选择滑块 · 左右拖动';}
 function start(){board=new Board();board.seed();nextBatch=board.generateBatch();renderPreview();selected=null;score=0;lines=0;busy=false;paused=false;startedAt=Date.now();ui.score.textContent='0';ui.lines.textContent='0';show(ui.menu,false);show(ui.game,true);show(ui.pause,false);show(ui.over,false);requestAnimationFrame(resize);}
 function home(){show(ui.menu,true);show(ui.game,false);show(ui.pause,false);show(ui.over,false);paused=false;}

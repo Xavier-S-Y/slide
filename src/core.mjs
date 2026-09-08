@@ -13,8 +13,7 @@ export class Board {
   fullRows(){const map=this.cells();const rows=[];for(let r=0;r<ROWS;r++)if(map[r].every(Boolean))rows.push(r);return rows;}
   clearChains(){let total=0,chains=0;while(true){const rows=this.fullRows();if(!rows.length)break;const set=new Set(rows);this.sliders=this.sliders.filter(s=>!set.has(s.row));total+=rows.length;chains++;this.settleAll();}return {total,chains};}
   generateBatch(){const total=3+Math.floor(this.random()*5);let remaining=total;const lengths=[];while(remaining){const len=1+Math.floor(this.random()*Math.min(5,remaining));lengths.push(len);remaining-=len;}const occupied=Array(COLS).fill(false);const placements=[];for(const length of lengths.sort((a,b)=>b-a)){const options=[];for(let col=0;col+length<=COLS;col++){let ok=true;for(let c=col;c<col+length;c++)if(occupied[c])ok=false;if(ok)options.push(col);}if(!options.length)continue;const col=options[Math.floor(this.random()*options.length)];for(let c=col;c<col+length;c++)occupied[c]=true;placements.push({col,length,colorId:Math.floor(this.random()*COLORS.length)});}return placements;}
-  insertBatch(batch=this.generateBatch()){
-    const targetCells=new Set();for(const item of batch)for(let c=item.col;c<item.col+item.length;c++)targetCells.add(c);
+  liftBottomRow(){
     const pushed=new Set();
     const pushUp=(slider)=>{
       if(pushed.has(slider.id))return;pushed.add(slider.id);
@@ -23,9 +22,17 @@ export class Board {
       for(const blocker of blockers)pushUp(blocker);
       slider.row=targetRow;
     };
-    const bottomBlockers=this.sliders.filter(s=>s.row===ROWS-1&&[...targetCells].some(c=>c>=s.col&&c<s.col+s.length));
+    const bottomBlockers=this.sliders.filter(s=>s.row===ROWS-1);
     for(const blocker of bottomBlockers)pushUp(blocker);
+    return bottomBlockers;
+  }
+  addBatch(batch){
     for(const item of batch)this.add(ROWS-1,item.col,item.length,item.colorId);
+    return batch;
+  }
+  insertBatch(batch=this.generateBatch()){
+    this.liftBottomRow();
+    this.addBatch(batch);
     this.settleAll();
     return batch;
   }
