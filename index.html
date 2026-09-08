@@ -11,14 +11,31 @@
   <main id="app">
     <section id="menu" class="screen menu-screen">
       <div class="glow glow-a"></div><div class="glow glow-b"></div>
-      <div class="content"><span class="tag">8列策略滑块</span><h1>土耳其<br>方块</h1><p class="eyebrow">SLIDE · DROP · CLEAR</p><p class="lead">移动已生成的横向滑块，<br>让它落下、拼满并消除整行。</p>
-        <div class="rule-card"><div><b>01</b><span><strong>左右移动</strong><small>每次选择一个已有滑块</small></span></div><div><b>02</b><span><strong>自动下落</strong><small>悬空时落到底部或其他滑块</small></span></div><div><b>03</b><span><strong>整行消除</strong><small>任意颜色填满 8 格即可</small></span></div></div>
-        <button id="startButton" class="primary">开始游戏 →</button><p class="footnote">无旋转 · 无道具 · 触顶结束</p></div>
+      <div class="content">
+        <span class="tag">8列策略滑块</span>
+        <h1>土耳其<br>方块</h1>
+        <p class="eyebrow">SLIDE · DROP · CLEAR</p>
+        <p class="lead">移动已生成的横向滑块，<br>让它落下、拼满并消除整行。</p>
+        <div class="rule-card">
+          <div><b>01</b><span><strong>左右移动</strong><small>每次选择一个已有滑块</small></span></div>
+          <div><b>02</b><span><strong>自动下落</strong><small>悬空时落到底部或其他滑块</small></span></div>
+          <div><b>03</b><span><strong>整行消除</strong><small>任意颜色填满 8 格即可</small></span></div>
+        </div>
+        <button id="startButton" class="primary">开始游戏 →</button>
+        <p class="footnote">无旋转 · 无道具 · 触顶结束</p>
+      </div>
     </section>
-    <section id="game" class="screen game-screen hidden"><header><div><h2>当前局</h2><p>填满横向 8 格即可消除</p></div><button id="pauseButton" class="icon-button" aria-label="暂停">Ⅱ</button></header><div class="stats"><span>分数 <b id="score">0</b></span><span>消除 <b id="lines">0</b></span></div><div id="boardWrap" class="board-wrap"><canvas id="board" aria-label="游戏棋盘"></canvas></div><div class="next-row"><div id="nextBatch" class="next-batch" aria-label="待生成滑块预览"></div></div><div class="hint"><strong id="hintTitle">选择滑块 · 左右拖动</strong><small id="hintText">松手后下方悬空，将自动下落</small></div><div class="controls"><button id="leftButton" aria-label="左移">←</button><button id="confirmButton" class="primary">松手落下</button><button id="rightButton" aria-label="右移">→</button></div></section>
+    <section id="game" class="screen game-screen hidden">
+      <header><div><h2>当前局</h2><p>填满横向 8 格即可消除</p></div><button id="pauseButton" class="icon-button" aria-label="暂停">Ⅱ</button></header>
+      <div class="stats"><span>分数 <b id="score">0</b></span><span>消除 <b id="lines">0</b></span></div>
+      <div id="boardWrap" class="board-wrap"><canvas id="board" aria-label="游戏棋盘"></canvas></div>
+      <div class="next-row"><div id="nextBatch" class="next-batch" aria-label="待生成滑块预览"></div></div>
+      <div class="hint"><strong id="hintTitle">选择滑块 · 左右拖动</strong><small id="hintText">松手后下方悬空，将自动下落</small></div>
+      <div class="controls"><button id="leftButton" aria-label="左移">←</button><button id="confirmButton" class="primary">松手落下</button><button id="rightButton" aria-label="右移">→</button></div>
+    </section>
     <div id="pauseModal" class="modal hidden"><div class="dialog"><div class="modal-icon">Ⅱ</div><h2>游戏暂停</h2><p>当前布局已保存</p><button id="resumeButton" class="primary">继续游戏</button><button id="pauseHomeButton" class="secondary">返回首页</button></div></div>
     <div id="gameOverModal" class="modal hidden"><div class="dialog result"><span class="danger-tag">触顶</span><h2>本局结束</h2><p>滑块触碰到了顶部危险线</p><div class="result-grid"><span>最终分数<b id="finalScore">0</b></span><span>消除行数<b id="finalLines">0</b></span><span>生存时间<b id="finalTime">0:00</b></span><span>最高分<b id="bestScore">0</b></span></div><button id="restartButton" class="primary">再来一局 →</button><button id="homeButton" class="secondary">返回首页</button></div></div>
   </main>
-  <script type="module" src="./src/game.mjs"></script>
+  <script type="module" src="./src/game.mjs?v=20260908-1"></script>
 </body>
 </html>
