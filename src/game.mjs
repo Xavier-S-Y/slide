@@ -18,7 +18,7 @@ function sliderAt(clientX,clientY){const rect=ui.canvas.getBoundingClientRect(),
 function select(s){if(busy||paused)return;selected=s;ui.hintTitle.textContent=s?'已选择滑块 · 左右拖动':'选择滑块 · 左右拖动';draw();}
 function renderPreview(){const el=$('nextBatch');el.replaceChildren();for(const p of nextBatch){const piece=document.createElement('i');piece.className='next-piece';piece.style.gridColumn=`${p.col+1} / span ${p.length}`;piece.style.gridRow='1';piece.style.background=COLORS[p.colorId];piece.title=`长度 ${p.length}`;el.appendChild(piece)}}
 function tween(ms,update){return new Promise(resolve=>{const begin=performance.now();const frame=now=>{const raw=Math.min(1,(now-begin)/ms),t=1-Math.pow(1-raw,3);update(t,raw);draw();raw<1?requestAnimationFrame(frame):resolve()};requestAnimationFrame(frame)})}
-async function animateRows(from,to,entering=new Set(),duration=260){visualRows=new Map();visualAlpha=new Map();await tween(duration,(t)=>{for(const s of board.sliders){const a=entering.has(s.id)?ROWS+.8:(from.get(s.id)??s.row),b=to.get(s.id)??s.row;visualRows.set(s.id,a+(b-a)*t);visualAlpha.set(s.id,entering.has(s.id)?Math.min(1,t*1.8):1)}});visualRows=null;visualAlpha=null;draw()}
+async function animateRows(from,to,entering=new Set(),duration=260,hidden=new Set()){visualRows=new Map();visualAlpha=new Map();await tween(duration,(t)=>{for(const s of board.sliders){const a=entering.has(s.id)?ROWS+.8:(from.get(s.id)??s.row),b=to.get(s.id)??s.row;visualRows.set(s.id,a+(b-a)*t);visualAlpha.set(s.id,hidden.has(s.id)?0:(entering.has(s.id)?Math.min(1,t*1.8):1))}});visualRows=null;visualAlpha=null;draw()}
 function applyClear(result){if(result.total){lines+=result.total;score+=result.total*100*Math.max(1,result.chains);ui.lines.textContent=lines;ui.score.textContent=score;}}
 async function animateClearChains(){let total=0,chains=0;while(true){const full=board.fullRows();if(!full.length)break;chains++;total+=full.length;const rows=new Set(full),clearing=new Set(board.sliders.filter(s=>rows.has(s.row)).map(s=>s.id));clearRows=rows;visualAlpha=new Map(board.sliders.map(s=>[s.id,1]));await tween(380,(t,raw)=>{clearProgress=raw;for(const id of clearing)visualAlpha.set(id,raw<.42?1:Math.max(0,1-(raw-.42)/.58))});board.sliders=board.sliders.filter(s=>!clearing.has(s.id));visualAlpha=null;clearRows=null;clearProgress=0;draw();const before=new Map(board.sliders.map(s=>[s.id,s.row]));board.settleAll();const after=new Map(board.sliders.map(s=>[s.id,s.row]));await animateRows(before,after,new Set(),260);}const result={total,chains};applyClear(result);return result;}
 async function spawnPreviewBatch(){
@@ -29,18 +29,18 @@ async function spawnPreviewBatch(){
   const afterLift=new Map(board.sliders.map(s=>[s.id,s.row]));
   await animateRows(beforeLift,afterLift,new Set(),260);
 
-  ui.hintTitle.textContent='新滑块生成中…';
+  // 新滑块先作为不可见支撑加入碰撞计算，确保旧滑块先完整落稳。
   const idsBefore=new Set(board.sliders.map(s=>s.id));
   board.addBatch(batchToSpawn);
-  const spawnedRows=new Map(board.sliders.map(s=>[s.id,s.row]));
   const entering=new Set(board.sliders.filter(s=>!idsBefore.has(s.id)).map(s=>s.id));
-  await animateRows(afterLift,spawnedRows,entering,300);
-
   ui.hintTitle.textContent='无支撑滑块自然下落';
   const beforeFall=new Map(board.sliders.map(s=>[s.id,s.row]));
   board.settleAll();
   const afterFall=new Map(board.sliders.map(s=>[s.id,s.row]));
-  await animateRows(beforeFall,afterFall,new Set(),300);
+  await animateRows(beforeFall,afterFall,new Set(),300,entering);
+
+  ui.hintTitle.textContent='新滑块生成中…';
+  await animateRows(afterFall,afterFall,entering,300);
   nextBatch=board.generateBatch();
   renderPreview();
 }
