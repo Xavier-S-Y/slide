@@ -50,8 +50,10 @@ function finish(){busy=true;const seconds=Math.floor((Date.now()-startedAt)/1000
 
 ui.canvas.addEventListener('pointerdown',e=>{const s=sliderAt(e.clientX,e.clientY);if(!s)return;select(s);dragStart=e.clientX;startCol=s.col;dragGhost={row:s.row,col:s.col,length:s.length};ui.canvas.setPointerCapture(e.pointerId);draw()});
 ui.canvas.addEventListener('pointermove',e=>{if(!selected||dragStart===null||busy)return;const m=metrics(),delta=Math.round((e.clientX-dragStart)/m.cell),target=Math.max(0,Math.min(COLS-selected.length,startCol+delta));selected.col=board.legalCol(selected,target);draw()});
-ui.canvas.addEventListener('pointerup',()=>{if(dragStart===null)return;dragStart=null;dragGhost=null;draw();commit()});
-ui.canvas.addEventListener('pointercancel',()=>{dragStart=null;dragGhost=null;draw()});
+function finishDrag(){if(dragStart===null)return;dragStart=null;dragGhost=null;draw();commit()}
+ui.canvas.addEventListener('pointerup',finishDrag);
+ui.canvas.addEventListener('pointercancel',finishDrag);
+ui.canvas.addEventListener('lostpointercapture',finishDrag);
 function nudge(dir){if(!selected||busy)return;if(dragStart===null)startCol=selected.col;selected.col=board.legalCol(selected,selected.col+dir);draw()}
 $('restartButton').onclick=start;$('homeButton').onclick=start;$('pauseHomeButton').onclick=start;$('pauseButton').onclick=()=>togglePause(true);$('resumeButton').onclick=()=>togglePause(false);$('leftButton').onclick=()=>nudge(-1);$('rightButton').onclick=()=>nudge(1);$('confirmButton').onclick=commit;
 document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nudge(-1);if(e.key==='ArrowRight')nudge(1);if(e.key==='Enter'||e.key===' ')commit();if(e.key==='Escape')togglePause(!paused)});document.addEventListener('visibilitychange',()=>{if(document.hidden&&!ui.game.classList.contains('hidden'))togglePause(true)});window.addEventListener('resize',resize);new ResizeObserver(resize).observe($('boardWrap'));start();
