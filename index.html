@@ -9,15 +9,27 @@
 </head>
 <body>
   <main id="app">
-    <section id="game" class="screen game-screen">
+    <section id="menu" class="screen mode-menu">
+      <button id="normalModeButton" class="mode-button">普通版</button>
+      <button id="itemModeButton" class="mode-button item-mode-button">道具版</button>
+    </section>
+
+    <section id="game" class="screen game-screen hidden">
       <header class="top-bar">
         <div class="stats"><span>分数 <b id="score">0</b></span><span>消除 <b id="lines">0</b></span></div>
-        <button id="pauseButton" class="icon-button" aria-label="暂停">Ⅱ</button>
+        <div class="top-actions"><button id="audioButton" class="icon-button" aria-label="声音">♪</button><button id="pauseButton" class="icon-button" aria-label="暂停">Ⅱ</button></div>
       </header>
       <div id="boardWrap" class="board-wrap">
         <canvas id="board" aria-label="游戏棋盘"></canvas>
       </div>
       <div class="next-row"><div id="nextBatch" class="next-batch" aria-label="待生成滑块预览"></div></div>
+      <div id="itemBar" class="item-bar hidden">
+        <button data-tool="move" aria-label="单块移动"><span>↗</span><b id="itemMoveCount">0</b></button>
+        <button data-tool="single" aria-label="单块消除"><span>✦</span><b id="itemSingleCount">0</b></button>
+        <button data-tool="row" aria-label="一行消除"><span>━</span><b id="itemRowCount">0</b></button>
+        <button data-tool="color" aria-label="同色消除"><span>●</span><b id="itemColorCount">0</b></button>
+      </div>
+      <div id="itemActions" class="item-actions hidden"><button id="cancelItemButton">取消</button><button id="useItemButton" class="primary" disabled>确定</button></div>
       <div class="hint visually-hidden"><strong id="hintTitle">选择滑块 · 左右拖动</strong><small id="hintText">松手后下方悬空，将自动下落</small></div>
       <div class="controls visually-hidden">
         <button id="leftButton" aria-label="左移">←</button>
@@ -29,7 +41,7 @@
     <div id="pauseModal" class="modal hidden">
       <div class="dialog"><div class="modal-icon">Ⅱ</div><h2>游戏暂停</h2><p>当前布局已保存</p>
         <button id="resumeButton" class="primary">继续游戏</button>
-        <button id="pauseHomeButton" class="secondary">重新开始</button>
+        <button id="pauseHomeButton" class="secondary">返回首页</button>
       </div>
     </div>
 
@@ -37,10 +49,11 @@
       <div class="dialog result"><span class="danger-tag">触顶</span><h2>本局结束</h2><p>滑块触碰到了顶部危险线</p>
         <div class="result-grid"><span>最终分数<b id="finalScore">0</b></span><span>消除行数<b id="finalLines">0</b></span><span>生存时间<b id="finalTime">0:00</b></span><span>最高分<b id="bestScore">0</b></span></div>
         <button id="restartButton" class="primary">再来一局 →</button>
-        <button id="homeButton" class="secondary">重新开始</button>
+        <button id="homeButton" class="secondary">返回首页</button>
       </div>
     </div>
+    <div id="toast" class="toast hidden"></div>
   </main>
-  <script type="module" src="./src/game.mjs?v=20260910-1"></script>
+  <script type="module" src="./src/game-v2.mjs?v=20260910-4"></script>
 </body>
 </html>

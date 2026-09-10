@@ -4,7 +4,7 @@ const COLORS=['#ef5776','#ff9f43','#f7d154','#5ac8b0','#6bb6e8'];
 
 export class Board {
   constructor(random=Math.random){this.random=random;this.sliders=[];this.nextId=1;}
-  add(row,col,length,colorId=Math.floor(this.random()*COLORS.length)){const s={id:String(this.nextId++),row,col,length,colorId};this.sliders.push(s);return s;}
+  add(row,col,length,colorId=Math.floor(this.random()*COLORS.length),itemType=null){const s={id:String(this.nextId++),row,col,length,colorId,itemType};this.sliders.push(s);return s;}
   cells(exceptId=null){const map=Array.from({length:ROWS},()=>Array(COLS).fill(null));for(const s of this.sliders){if(s.id===exceptId)continue;for(let c=s.col;c<s.col+s.length;c++)if(s.row>=0&&s.row<ROWS)map[s.row][c]=s.id;}return map;}
   canPlace(slider,row,col){if(col<0||col+slider.length>COLS||row<0||row>=ROWS)return false;const map=this.cells(slider.id);for(let c=col;c<col+slider.length;c++)if(map[row][c])return false;return true;}
   legalCol(slider,target){const dir=Math.sign(target-slider.col);let col=slider.col;while(col!==target){const next=col+dir;if(!this.canPlace(slider,slider.row,next))break;col=next;}return col;}
@@ -27,7 +27,7 @@ export class Board {
     return bottomBlockers;
   }
   addBatch(batch){
-    for(const item of batch)this.add(ROWS-1,item.col,item.length,item.colorId);
+    for(const item of batch)this.add(ROWS-1,item.col,item.length,item.colorId,item.itemType||null);
     return batch;
   }
   insertBatch(batch=this.generateBatch()){
