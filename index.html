@@ -21,13 +21,14 @@
       </header>
       <div id="boardWrap" class="board-wrap">
         <canvas id="board" aria-label="游戏棋盘"></canvas>
+        <div id="comboBadge" class="combo-badge hidden" aria-live="polite"></div>
       </div>
       <div class="next-row"><div id="nextBatch" class="next-batch" aria-label="待生成滑块预览"></div></div>
       <div id="itemBar" class="item-bar hidden">
-        <button data-tool="move" aria-label="单块移动"><span>↗</span><b id="itemMoveCount">0</b></button>
-        <button data-tool="single" aria-label="单块消除"><span>✦</span><b id="itemSingleCount">0</b></button>
-        <button data-tool="row" aria-label="一行消除"><span>━</span><b id="itemRowCount">0</b></button>
-        <button data-tool="color" aria-label="同色消除"><span>●</span><b id="itemColorCount">0</b></button>
+        <button data-tool="move" aria-label="单块移动"><span>↗</span><b id="itemMoveCount">0/2</b></button>
+        <button data-tool="single" aria-label="单块消除"><span>✦</span><b id="itemSingleCount">0/2</b></button>
+        <button data-tool="row" aria-label="一行消除"><span>━</span><b id="itemRowCount">0/2</b></button>
+        <button data-tool="color" aria-label="同色消除"><span>●</span><b id="itemColorCount">0/2</b></button>
       </div>
       <div id="itemActions" class="item-actions hidden"><button id="cancelItemButton">取消</button><button id="useItemButton" class="primary" disabled>确定</button></div>
       <div class="hint visually-hidden"><strong id="hintTitle">选择滑块 · 左右拖动</strong><small id="hintText">松手后下方悬空，将自动下落</small></div>
@@ -54,6 +55,6 @@
     </div>
     <div id="toast" class="toast hidden"></div>
   </main>
-  <script type="module" src="./src/game-v2.mjs?v=20260910-5"></script>
+  <script type="module" src="./src/game-v2.mjs?v=20260910-10"></script>
 </body>
 </html>

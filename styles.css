@@ -22,7 +22,9 @@ body{background:radial-gradient(ellipse at 50% 0,#28304e 0,#101426 38%,#050610 7
 .icon-button{width:42px;height:42px;border-radius:50%;background:#111526;border:2px solid #60709b;box-shadow:none}
 .board-wrap{flex:none;width:100%;height:490px;min-height:490px;max-height:490px;margin-top:14px;border:2px solid #56668d;border-radius:0;background:#090b14;box-shadow:0 12px 30px #0009;overflow:hidden}
 .next-row{width:100%;height:20px;margin:5px 0 0}
+.next-row.double{height:34px}
 .next-batch{height:20px;padding:3px 6px;gap:3px;border:1px solid #56668d;border-radius:0;background:#090b14;box-shadow:none}
+.next-batch.double{height:34px;grid-template-rows:repeat(2,1fr);row-gap:3px}
 .next-piece{height:5px;border-radius:1px;box-shadow:none;background-image:none}
 .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .modal{background:#02040bd9;backdrop-filter:blur(5px)}
@@ -61,6 +63,8 @@ body{background:linear-gradient(155deg,#dff8f3 0%,#dceeff 48%,#fff0e1 100%)}
 .item-actions button{height:42px;border-radius:21px;background:#fffdf7;color:#568087;box-shadow:0 3px 0 #91c9c1;font-size:14px;font-weight:700}.item-actions .primary{height:42px}.item-actions .primary:disabled{opacity:.45;filter:grayscale(.7)}
 .next-piece{position:relative;display:flex;align-items:center;justify-content:flex-end;padding-right:3px;color:#416f72;font-size:9px;font-style:normal;font-weight:900;line-height:1}
 .toast{position:absolute;z-index:20;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);max-width:85%;padding:10px 18px;border:3px solid #fff;border-radius:22px;background:#5db9ae;color:#fff;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 6px 18px #477d7866;animation:toastIn .2s ease-out}
+.combo-badge{position:absolute;z-index:5;left:50%;top:42%;transform:translate(-50%,-50%);padding:8px 18px;border:3px solid #fff;border-radius:999px;background:#ffca67;color:#725a35;font:800 20px/1 "Arial Rounded MT Bold","Microsoft YaHei UI",sans-serif;white-space:nowrap;box-shadow:0 5px 0 #e0a84e,0 10px 24px #64928d55;pointer-events:none;animation:comboIn .9s ease-out both}
+@keyframes comboIn{0%{opacity:0;transform:translate(-50%,-35%) scale(.7)}20%,72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-65%) scale(1.08)}}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
 .items-mode .board-wrap{height:min(430px,calc(100dvh - 245px));min-height:290px}
 .stats,.stats span,.stats b{font-family:"Arial Rounded MT Bold","Microsoft YaHei UI",sans-serif;text-shadow:none!important;-webkit-font-smoothing:antialiased}
