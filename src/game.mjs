@@ -1,4 +1,4 @@
-import {Board,COLS,ROWS,COLORS} from './core.mjs';
+import {Board,COLS,ROWS,COLORS} from './core.mjs?v=20260910-1';
 const $=id=>document.getElementById(id);
 const ui={menu:$('menu'),game:$('game'),pause:$('pauseModal'),over:$('gameOverModal'),canvas:$('board'),score:$('score'),lines:$('lines'),hintTitle:$('hintTitle'),hintText:$('hintText')};
 const ctx=ui.canvas.getContext('2d');
