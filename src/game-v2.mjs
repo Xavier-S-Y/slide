@@ -1,6 +1,6 @@
 import {Board,COLS,ROWS,COLORS} from './core.mjs?v=20260910-2';
 import {AudioEngine} from './audio.mjs?v=20260910-2';
-import {TOOL_DEFS as TOOLS,decorateBatch} from './items.mjs?v=20260910-2';
+import {TOOL_DEFS as TOOLS,decorateBatch} from './items.mjs?v=20260910-3';
 
 const $=id=>document.getElementById(id);
 const ui={menu:$('menu'),game:$('game'),pause:$('pauseModal'),over:$('gameOverModal'),canvas:$('board'),score:$('score'),lines:$('lines'),hintTitle:$('hintTitle'),hintText:$('hintText'),itemBar:$('itemBar'),itemActions:$('itemActions'),useItem:$('useItemButton'),toast:$('toast'),audio:$('audioButton')};
