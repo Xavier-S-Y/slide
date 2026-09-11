@@ -70,3 +70,4 @@ body{background:linear-gradient(155deg,#dff8f3 0%,#dceeff 48%,#fff0e1 100%)}
 .stats,.stats span,.stats b{font-family:"Arial Rounded MT Bold","Microsoft YaHei UI",sans-serif;text-shadow:none!important;-webkit-font-smoothing:antialiased}
 .stats span{font-weight:600;letter-spacing:.2px}.stats b{font-weight:700}
 @media(max-height:720px){.items-mode .board-wrap{height:calc(100dvh - 238px);min-height:270px}.item-bar{margin-top:7px}.item-bar button{height:42px}.item-actions{margin-top:7px}.item-actions button,.item-actions .primary{height:36px}}
+
